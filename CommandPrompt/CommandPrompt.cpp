@@ -17,6 +17,7 @@ int ___istupper(_TINT c);
 int ___istlower(_TINT c);
 int ___totupper(_TINT c);
 int ___totlower(_TINT c);
+int ___tcscpy_s(LPTSTR dest, rsize_t dest_size, LPCTSTR src);
 
 int _tmain(void)
 {
@@ -25,16 +26,26 @@ int _tmain(void)
 	_tprintf(_T("명령 프롬프트 프로젝트 ( %zd 바이트 시스템 / 문자 크기 %zd )\n\n"), sizeof(SIZE_T), sizeof(TCHAR));
 	
 	TCHAR str[] = _T("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789가나다라마바사아자차카타파하!@#$%^&*() \t\n,./+-<>;");
+	TCHAR dest[10];
 
-	for (int i = 0; str[i] != NULL; i++)
-	{
-		_tprintf(_T("%c\n"), str[i]);
+	_tprintf(_T("%d\n"), ___tcscpy_s(NULL, 0, NULL));
 
-		_tprintf(_T("대문자 변환 %c %c\n"), _totupper(str[i]), ___totupper(str[i]));
-		_tprintf(_T("소문자 변환 %c %c\n"), _totlower(str[i]), ___totlower(str[i]));
+	dest[0] = _T('a');
+	_tprintf(_T("%s / %d\n"), dest, ___tcscpy_s(dest, 0, NULL));
 
-		_tprintf(_T("\n"));
-	}
+	dest[0] = _T('a');
+	_tprintf(_T("%s / %d\n"), dest, ___tcscpy_s(dest, 0, str));
+
+	dest[0] = _T('a');
+	_tprintf(_T("%s / %d\n"), dest, ___tcscpy_s(dest, _countof(dest), str));
+
+	dest[0] = _T('a');
+	_tcscpy_s(dest, _countof(dest), _T("aA가\t!"));
+	_tprintf(_T("%s\n"), dest);
+
+	dest[0] = _T('a');
+	___tcscpy_s(dest, _countof(dest), _T("aA가\t!"));
+	_tprintf(_T("%s\n"), dest);
 
 	return 0;
 }
@@ -75,4 +86,28 @@ int ___totlower(_TINT c)
 	}
 
 	return c;
+}
+
+int ___tcscpy_s(LPTSTR dest, rsize_t dest_size, LPCTSTR src)
+{
+	if (!dest)
+		return -1;
+
+	if (!src)
+	{
+		dest[0] = NULL;
+		return -1;
+	}
+
+	for (rsize_t index = 0; index < dest_size; ++index)
+	{
+		dest[index] = src[index];
+
+		if (!dest[index])
+			return 0;
+	}
+
+	dest[0] = NULL;
+
+	return -1;
 }
