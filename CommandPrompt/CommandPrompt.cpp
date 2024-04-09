@@ -19,6 +19,7 @@ int ___totupper(_TINT c);
 int ___totlower(_TINT c);
 int ___tcscpy_s(LPTSTR dest, rsize_t dest_size, LPCTSTR src);
 int ___tcscmp(LPCTSTR string1, LPCTSTR string2);
+LPTSTR ___tcstok_s(LPTSTR str, LPCTSTR delimiters, TCHAR** context);
 
 int _tmain(void)
 {
@@ -26,25 +27,24 @@ int _tmain(void)
 
 	_tprintf(_T("명령 프롬프트 프로젝트 ( %zd 바이트 시스템 / 문자 크기 %zd )\n\n"), sizeof(SIZE_T), sizeof(TCHAR));
 	
-	LPCTSTR str1 = _T("aA0가");
-	LPCTSTR str2 = _T("aA0가\t!");
-	_tprintf(_T("%d %d\n"), _tcscmp(str1, str2), ___tcscmp(str1, str2));
+	TCHAR string1[] = _T("A string\tof, , tokens\nand some  more tokens");
+	TCHAR string2[] = _T("A string\tof, , tokens\nand some  more tokens");
+	TCHAR seps[] = _T(" ,\t\n");
+	TCHAR* token1;
+	TCHAR* token2;
+	TCHAR* next_token1 = NULL;
+	TCHAR* next_token2 = NULL;
 
-	str1 = _T("aA0가\t!");
-	str2 = _T("aA0가");
-	_tprintf(_T("%d %d\n"), _tcscmp(str1, str2), ___tcscmp(str1, str2));
+	token1 = _tcstok_s(string1, seps, &next_token1);
+	token2 = ___tcstok_s(string2, seps, &next_token2);
 
-	str1 = _T("aA0가\t@");
-	str2 = _T("aA0가\t!");
-	_tprintf(_T("%d %d\n"), _tcscmp(str1, str2), ___tcscmp(str1, str2));
+	while ((token1 != NULL) && (token2 != NULL))
+	{
+		_tprintf(_T("%s\t%s\n"), token1, token2);
 
-	str1 = _T("aA0가\t!");
-	str2 = _T("aA0가\t@");
-	_tprintf(_T("%d %d\n"), _tcscmp(str1, str2), ___tcscmp(str1, str2));
-
-	str1 = _T("aA0가\t!");
-	str2 = _T("aA0가\t!");
-	_tprintf(_T("%d %d\n"), _tcscmp(str1, str2), ___tcscmp(str1, str2));
+		token1 = _tcstok_s(NULL, seps, &next_token1);
+		token2 = ___tcstok_s(NULL, seps, &next_token2);
+	}
 
 	return 0;
 }
@@ -126,4 +126,54 @@ int ___tcscmp(LPCTSTR string1, LPCTSTR string2)
 	}
 
 	return -1;
+}
+
+LPTSTR ___tcstok_s(LPTSTR str, LPCTSTR delimiters, TCHAR** context)
+{
+	if (!delimiters || !context)
+		return NULL;
+
+	if (str)
+		*context = str;
+
+	if (**context == NULL)
+		return NULL;
+
+	while (**context)
+	{
+		int flag = 0;
+
+		for (rsize_t index = 0; delimiters[index] != NULL; index++)
+		{
+			if (**context == delimiters[index])
+			{
+				flag = 1;
+				break;
+			}
+		}
+
+		if (flag)
+			++(*context);
+		else
+			break;
+	}
+
+	LPTSTR temp = *context;
+
+	while (**context)
+	{
+		for (rsize_t index = 0; delimiters[index] != NULL; index++)
+		{
+			if (**context == delimiters[index])
+			{
+				**context = NULL;
+				++(*context);
+				return temp;
+			}
+		}
+
+		++(*context);
+	}
+
+	return temp;
 }
