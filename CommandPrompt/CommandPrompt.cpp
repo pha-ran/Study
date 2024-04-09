@@ -18,6 +18,7 @@ int ___istlower(_TINT c);
 int ___totupper(_TINT c);
 int ___totlower(_TINT c);
 int ___tcscpy_s(LPTSTR dest, rsize_t dest_size, LPCTSTR src);
+int ___tcscmp(LPCTSTR string1, LPCTSTR string2);
 
 int _tmain(void)
 {
@@ -25,27 +26,25 @@ int _tmain(void)
 
 	_tprintf(_T("명령 프롬프트 프로젝트 ( %zd 바이트 시스템 / 문자 크기 %zd )\n\n"), sizeof(SIZE_T), sizeof(TCHAR));
 	
-	TCHAR str[] = _T("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789가나다라마바사아자차카타파하!@#$%^&*() \t\n,./+-<>;");
-	TCHAR dest[10];
+	LPCTSTR str1 = _T("aA0가");
+	LPCTSTR str2 = _T("aA0가\t!");
+	_tprintf(_T("%d %d\n"), _tcscmp(str1, str2), ___tcscmp(str1, str2));
 
-	_tprintf(_T("%d\n"), ___tcscpy_s(NULL, 0, NULL));
+	str1 = _T("aA0가\t!");
+	str2 = _T("aA0가");
+	_tprintf(_T("%d %d\n"), _tcscmp(str1, str2), ___tcscmp(str1, str2));
 
-	dest[0] = _T('a');
-	_tprintf(_T("%s / %d\n"), dest, ___tcscpy_s(dest, 0, NULL));
+	str1 = _T("aA0가\t@");
+	str2 = _T("aA0가\t!");
+	_tprintf(_T("%d %d\n"), _tcscmp(str1, str2), ___tcscmp(str1, str2));
 
-	dest[0] = _T('a');
-	_tprintf(_T("%s / %d\n"), dest, ___tcscpy_s(dest, 0, str));
+	str1 = _T("aA0가\t!");
+	str2 = _T("aA0가\t@");
+	_tprintf(_T("%d %d\n"), _tcscmp(str1, str2), ___tcscmp(str1, str2));
 
-	dest[0] = _T('a');
-	_tprintf(_T("%s / %d\n"), dest, ___tcscpy_s(dest, _countof(dest), str));
-
-	dest[0] = _T('a');
-	_tcscpy_s(dest, _countof(dest), _T("aA가\t!"));
-	_tprintf(_T("%s\n"), dest);
-
-	dest[0] = _T('a');
-	___tcscpy_s(dest, _countof(dest), _T("aA가\t!"));
-	_tprintf(_T("%s\n"), dest);
+	str1 = _T("aA0가\t!");
+	str2 = _T("aA0가\t!");
+	_tprintf(_T("%d %d\n"), _tcscmp(str1, str2), ___tcscmp(str1, str2));
 
 	return 0;
 }
@@ -108,6 +107,23 @@ int ___tcscpy_s(LPTSTR dest, rsize_t dest_size, LPCTSTR src)
 	}
 
 	dest[0] = NULL;
+
+	return -1;
+}
+
+int ___tcscmp(LPCTSTR string1, LPCTSTR string2)
+{
+	if (!string1 || !string2)
+		return -1;
+
+	while (*string1 == *string2)
+	{
+		if (*string1 == _T('\0'))
+			return 0;
+
+		++string1;
+		++string2;
+	}
 
 	return -1;
 }
