@@ -20,31 +20,22 @@ int ___totlower(_TINT c);
 int ___tcscpy_s(LPTSTR dest, rsize_t dest_size, LPCTSTR src);
 int ___tcscmp(LPCTSTR string1, LPCTSTR string2);
 LPTSTR ___tcstok_s(LPTSTR str, LPCTSTR delimiters, TCHAR** context);
+int commandProcessing(void);
+
+LPCTSTR titleString = _T("명령 프롬프트 프로젝트 ( %zd 바이트 시스템 / 문자 크기 %zd )\n\n");
+LPCTSTR errorString = _T("'%s'은(는) 내부 또는 외부 명령, 실행할 수 있는 프로그램, 또는 배치 파일이 아닙니다.\n");
+LPCTSTR seps = _T(" ,\t\n");
+
+TCHAR commandString[MAX_STR_LEN];
+TCHAR tokenList[MAX_TOK_NUM][MAX_STR_LEN];
 
 int _tmain(void)
 {
 	_wsetlocale(LC_ALL, L"korean");
 
-	_tprintf(_T("명령 프롬프트 프로젝트 ( %zd 바이트 시스템 / 문자 크기 %zd )\n\n"), sizeof(SIZE_T), sizeof(TCHAR));
+	_tprintf(titleString, sizeof(SIZE_T), sizeof(TCHAR));
 	
-	TCHAR string1[] = _T("A string\tof, , tokens\nand some  more tokens");
-	TCHAR string2[] = _T("A string\tof, , tokens\nand some  more tokens");
-	TCHAR seps[] = _T(" ,\t\n");
-	TCHAR* token1;
-	TCHAR* token2;
-	TCHAR* next_token1 = NULL;
-	TCHAR* next_token2 = NULL;
-
-	token1 = _tcstok_s(string1, seps, &next_token1);
-	token2 = ___tcstok_s(string2, seps, &next_token2);
-
-	while ((token1 != NULL) && (token2 != NULL))
-	{
-		_tprintf(_T("%s\t%s\n"), token1, token2);
-
-		token1 = _tcstok_s(NULL, seps, &next_token1);
-		token2 = ___tcstok_s(NULL, seps, &next_token2);
-	}
+	while (commandProcessing());
 
 	return 0;
 }
@@ -176,4 +167,47 @@ LPTSTR ___tcstok_s(LPTSTR str, LPCTSTR delimiters, TCHAR** context)
 	}
 
 	return temp;
+}
+
+int commandProcessing(void)
+{
+	_tprintf(_T("명령어>"));
+
+	_getts_s(commandString, _countof(commandString));
+
+	for (rsize_t index = 0; commandString[index] != NULL; index++)
+	{
+		if (___istupper(commandString[index]))
+			commandString[index] = ___totlower(commandString[index]);
+	}
+
+	int num = 0;
+	TCHAR* context = NULL;
+	TCHAR* token = ___tcstok_s(commandString, seps, &context);
+
+	if (!token)
+		return -1;
+
+	while (token)
+	{
+		___tcscpy_s(tokenList[num], MAX_STR_LEN, token);
+		++num;
+		token = ___tcstok_s(NULL, seps, &context);
+	}
+
+	if (!___tcscmp(tokenList[0], _T("exit")))
+		return 0;
+	else
+	{
+		_tprintf(errorString, tokenList[0]);
+
+		for (int next = 0; next < num; next++)
+		{
+			_tprintf(_T("%s\n"), tokenList[next]);
+		}
+
+		_tprintf(_T("\n"));
+	}
+
+	return 1;
 }
