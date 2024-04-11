@@ -199,15 +199,29 @@ int commandProcessing(void)
 		return 0;
 	else
 	{
-		_tprintf(errorString, tokenList[0]);
+		STARTUPINFO si;
+		PROCESS_INFORMATION pi;
 
-		for (int next = 0; next < num; next++)
+		SecureZeroMemory(&si, sizeof(si));
+		SecureZeroMemory(&pi, sizeof(pi));
+
+		si.cb = sizeof(si);
+
+		if (!CreateProcess(NULL, tokenList[0], NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi))
 		{
-			_tprintf(_T("%s\n"), tokenList[next]);
+			_tprintf(errorString, tokenList[0]);
+			_tprintf(_T("\n"));
+
+			return -1;
 		}
 
-		_tprintf(_T("\n"));
-	}
+		WaitForSingleObject(pi.hProcess, INFINITE);
 
-	return 1;
+		CloseHandle(pi.hProcess);
+		CloseHandle(pi.hThread);
+
+		_tprintf(_T("\n"));
+
+		return 1;
+	}
 }
