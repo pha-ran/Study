@@ -19,6 +19,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Directory", "Directory\Dire
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HighPriorityChildProcess", "HighPriorityChildProcess\HighPriorityChildProcess.vcxproj", "{56F5976C-380D-4AF8-A07F-D34FAB65E301}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NormalPriorityParentProcess", "NormalPriorityParentProcess\NormalPriorityParentProcess.vcxproj", "{0B078268-DD4B-4DE5-830B-16FCD8D35FE7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -91,6 +93,14 @@ Global
 		{56F5976C-380D-4AF8-A07F-D34FAB65E301}.Release|x64.Build.0 = Release|x64
 		{56F5976C-380D-4AF8-A07F-D34FAB65E301}.Release|x86.ActiveCfg = Release|Win32
 		{56F5976C-380D-4AF8-A07F-D34FAB65E301}.Release|x86.Build.0 = Release|Win32
+		{0B078268-DD4B-4DE5-830B-16FCD8D35FE7}.Debug|x64.ActiveCfg = Debug|x64
+		{0B078268-DD4B-4DE5-830B-16FCD8D35FE7}.Debug|x64.Build.0 = Debug|x64
+		{0B078268-DD4B-4DE5-830B-16FCD8D35FE7}.Debug|x86.ActiveCfg = Debug|Win32
+		{0B078268-DD4B-4DE5-830B-16FCD8D35FE7}.Debug|x86.Build.0 = Debug|Win32
+		{0B078268-DD4B-4DE5-830B-16FCD8D35FE7}.Release|x64.ActiveCfg = Release|x64
+		{0B078268-DD4B-4DE5-830B-16FCD8D35FE7}.Release|x64.Build.0 = Release|x64
+		{0B078268-DD4B-4DE5-830B-16FCD8D35FE7}.Release|x86.ActiveCfg = Release|Win32
+		{0B078268-DD4B-4DE5-830B-16FCD8D35FE7}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
