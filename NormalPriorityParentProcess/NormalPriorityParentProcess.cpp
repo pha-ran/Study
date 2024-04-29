@@ -6,8 +6,6 @@
 
 int _tmain(void)
 {
-	SetPriorityClass(GetCurrentProcess(), NORMAL_PRIORITY_CLASS);
-
 	STARTUPINFO si;
 	PROCESS_INFORMATION pi;
 
@@ -24,8 +22,6 @@ int _tmain(void)
 		return -1;
 	}
 
-	int t = 0;
-
 	while (1)
 	{
 		for (int i = 0; i < 10000; i++)
@@ -35,11 +31,6 @@ int _tmain(void)
 		}
 
 		_tprintf(_T("Parent\n"));
-
-		t += 1;
-
-		if (t == 2)
-			SetPriorityClass(pi.hProcess, NORMAL_PRIORITY_CLASS);
 	}
 
 	CloseHandle(pi.hProcess);
