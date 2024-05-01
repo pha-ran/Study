@@ -23,6 +23,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NormalPriorityParentProcess
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GetLastError", "GetLastError\GetLastError.vcxproj", "{9B5FB392-4996-4647-8A9E-CD80EF614134}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CloseHandle", "CloseHandle\CloseHandle.vcxproj", "{B0FE829A-4370-4160-B4B3-6BC2DD25A4C0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -111,6 +113,14 @@ Global
 		{9B5FB392-4996-4647-8A9E-CD80EF614134}.Release|x64.Build.0 = Release|x64
 		{9B5FB392-4996-4647-8A9E-CD80EF614134}.Release|x86.ActiveCfg = Release|Win32
 		{9B5FB392-4996-4647-8A9E-CD80EF614134}.Release|x86.Build.0 = Release|Win32
+		{B0FE829A-4370-4160-B4B3-6BC2DD25A4C0}.Debug|x64.ActiveCfg = Debug|x64
+		{B0FE829A-4370-4160-B4B3-6BC2DD25A4C0}.Debug|x64.Build.0 = Debug|x64
+		{B0FE829A-4370-4160-B4B3-6BC2DD25A4C0}.Debug|x86.ActiveCfg = Debug|Win32
+		{B0FE829A-4370-4160-B4B3-6BC2DD25A4C0}.Debug|x86.Build.0 = Debug|Win32
+		{B0FE829A-4370-4160-B4B3-6BC2DD25A4C0}.Release|x64.ActiveCfg = Release|x64
+		{B0FE829A-4370-4160-B4B3-6BC2DD25A4C0}.Release|x64.Build.0 = Release|x64
+		{B0FE829A-4370-4160-B4B3-6BC2DD25A4C0}.Release|x86.ActiveCfg = Release|Win32
+		{B0FE829A-4370-4160-B4B3-6BC2DD25A4C0}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
