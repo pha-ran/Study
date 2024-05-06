@@ -275,7 +275,13 @@ int commandProcessing(int num)
 
 		si.cb = sizeof(si);
 
-		if (!CreateProcess(NULL, tokenList[0], NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi))
+		TCHAR arg[MAX_STR_LEN];
+		___tcscpy_s(arg, MAX_STR_LEN, tokenList[0]);
+
+		for (int index = 1; index < num; ++index)
+			_stprintf_s(arg, MAX_STR_LEN, _T("%s %s"), arg, tokenList[index]);
+
+		if (!CreateProcess(NULL, arg, NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi))
 		{
 			_tprintf(errorString, tokenList[0]);
 			_tprintf(_T("\n"));
