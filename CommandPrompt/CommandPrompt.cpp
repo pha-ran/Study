@@ -20,7 +20,8 @@ int ___totlower(_TINT c);
 int ___tcscpy_s(LPTSTR dest, rsize_t dest_size, LPCTSTR src);
 int ___tcscmp(LPCTSTR string1, LPCTSTR string2);
 LPTSTR ___tcstok_s(LPTSTR str, LPCTSTR delimiters, TCHAR** context);
-int commandProcessing(void);
+LPTSTR ___tcslwr(LPTSTR str);
+int commandProcessing(int num);
 
 LPCTSTR titleString = _T("명령 프롬프트 프로젝트 ( %zd 바이트 시스템 / 문자 크기 %zd )\n\n");
 LPCTSTR errorString = _T("'%s'은(는) 내부 또는 외부 명령, 실행할 수 있는 프로그램, 또는 배치 파일이 아닙니다.\n");
@@ -29,13 +30,27 @@ LPCTSTR seps = _T(" ,\t\n");
 TCHAR commandString[MAX_STR_LEN];
 TCHAR tokenList[MAX_TOK_NUM][MAX_STR_LEN];
 
-int _tmain(void)
+int _tmain(int argc, TCHAR* argv[])
 {
 	_wsetlocale(LC_ALL, L"korean");
 
-	_tprintf(titleString, sizeof(SIZE_T), sizeof(TCHAR));
+	if (argc > 1)
+	{
+		for (int index = 1; index < argc; ++index)
+		{
+			___tcscpy_s(tokenList[index - 1], MAX_STR_LEN, argv[index]);
+			___tcslwr(tokenList[index - 1]);
+		}
+
+		if (!commandProcessing(argc - 1))
+			return 0;
+	}
+	else
+	{
+		_tprintf(titleString, sizeof(SIZE_T), sizeof(TCHAR));
+	}
 	
-	while (commandProcessing());
+	while (commandProcessing(0));
 
 	return 0;
 }
@@ -169,34 +184,87 @@ LPTSTR ___tcstok_s(LPTSTR str, LPCTSTR delimiters, TCHAR** context)
 	return temp;
 }
 
-int commandProcessing(void)
+LPTSTR ___tcslwr(LPTSTR str)
 {
-	_tprintf(_T("명령어>"));
-
-	_getts_s(commandString, _countof(commandString));
-
-	for (rsize_t index = 0; commandString[index] != NULL; index++)
+	for (int index = 0; str[index] != NULL; index++)
 	{
-		if (___istupper(commandString[index]))
-			commandString[index] = ___totlower(commandString[index]);
+		if (___istupper(str[index]))
+			str[index] = ___totlower(str[index]);
 	}
 
-	int num = 0;
-	TCHAR* context = NULL;
-	TCHAR* token = ___tcstok_s(commandString, seps, &context);
+	return str;
+}
 
-	if (!token)
-		return -1;
-
-	while (token)
+int commandProcessing(int num)
+{
+	if (!num)
 	{
-		___tcscpy_s(tokenList[num], MAX_STR_LEN, token);
-		++num;
-		token = ___tcstok_s(NULL, seps, &context);
+		_tprintf(_T("명령어>"));
+
+		_getts_s(commandString, _countof(commandString));
+
+		TCHAR* context = NULL;
+		TCHAR* token = ___tcstok_s(commandString, seps, &context);
+
+		if (!token)
+			return -1;
+
+		while (token)
+		{
+			___tcscpy_s(tokenList[num], MAX_STR_LEN, ___tcslwr(token));
+			++num;
+			token = ___tcstok_s(NULL, seps, &context);
+		}
 	}
 
 	if (!___tcscmp(tokenList[0], _T("exit")))
 		return 0;
+	else if (!___tcscmp(tokenList[0], _T("echo")))
+	{
+		for (int index = 1; index < num; ++index)
+			_tprintf(_T("%s "), tokenList[index]);
+
+		_tprintf(_T("\n\n"));
+	}
+	else if (!___tcscmp(tokenList[0], _T("start")))
+	{
+		STARTUPINFO si;
+		PROCESS_INFORMATION pi;
+
+		SecureZeroMemory(&si, sizeof(si));
+		SecureZeroMemory(&pi, sizeof(pi));
+
+		si.cb = sizeof(si);
+
+		TCHAR arg[MAX_STR_LEN + 18] = _T("CommandPrompt.exe");
+		int len = 17;
+
+		for (int tIndex = 1; tIndex < num; ++tIndex)
+		{
+			arg[len] = _T(' ');
+			++len;
+
+			for (int sIndex = 0; tokenList[tIndex][sIndex] != _T('\0'); ++sIndex, ++len)
+				arg[len] = tokenList[tIndex][sIndex];
+		}
+
+		arg[len] = _T('\0');
+
+		if (!CreateProcess(NULL, arg, NULL, NULL, FALSE, CREATE_NEW_CONSOLE, NULL, NULL, &si, &pi))
+		{
+			_tprintf(errorString, tokenList[0]);
+			_tprintf(_T("\n"));
+
+			return -1;
+		}
+
+		CloseHandle(pi.hProcess);
+		CloseHandle(pi.hThread);
+
+		_tprintf(_T("\n"));
+
+		return 1;
+	}
 	else
 	{
 		STARTUPINFO si;
