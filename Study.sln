@@ -31,6 +31,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ExitCodeParentProcess", "Ex
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MailslotReceiver", "MailslotReceiver\MailslotReceiver.vcxproj", "{87271758-3F7B-45E4-89D7-DD245CC51D8C}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MailslotSender", "MailslotSender\MailslotSender.vcxproj", "{7101D538-3F82-498E-B652-973D22093D94}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -151,6 +153,14 @@ Global
 		{87271758-3F7B-45E4-89D7-DD245CC51D8C}.Release|x64.Build.0 = Release|x64
 		{87271758-3F7B-45E4-89D7-DD245CC51D8C}.Release|x86.ActiveCfg = Release|Win32
 		{87271758-3F7B-45E4-89D7-DD245CC51D8C}.Release|x86.Build.0 = Release|Win32
+		{7101D538-3F82-498E-B652-973D22093D94}.Debug|x64.ActiveCfg = Debug|x64
+		{7101D538-3F82-498E-B652-973D22093D94}.Debug|x64.Build.0 = Debug|x64
+		{7101D538-3F82-498E-B652-973D22093D94}.Debug|x86.ActiveCfg = Debug|Win32
+		{7101D538-3F82-498E-B652-973D22093D94}.Debug|x86.Build.0 = Debug|Win32
+		{7101D538-3F82-498E-B652-973D22093D94}.Release|x64.ActiveCfg = Release|x64
+		{7101D538-3F82-498E-B652-973D22093D94}.Release|x64.Build.0 = Release|x64
+		{7101D538-3F82-498E-B652-973D22093D94}.Release|x86.ActiveCfg = Release|Win32
+		{7101D538-3F82-498E-B652-973D22093D94}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
